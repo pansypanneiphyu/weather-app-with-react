@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import FormatDate from "./FormatDate";
 import axios from "axios";
 import "./Weather.css";
 
@@ -7,12 +8,13 @@ export default function Weather(props) {
   function handleResponse(response) {
     setWeatherData({
       show: true,
+      coordinates: response.data.coord,
       temperature: response.data.main.temp,
-      wind: response.data.wind.speed,
       humidity: response.data.main.humidity,
-      description: response.data.weather[0].decription,
-      date: "Wednesday 07:00",
-      iconUrl: "https://ssl.gstatic.com/onebox/weather/64/partly_cloudy.png",
+      date: new Date(response.data.dt * 1000),
+      description: response.data.weather[0].description,
+      icon: response.data.weather[0].icon,
+      wind: response.data.wind.speed,
       city: response.data.name,
     });
   }
@@ -26,7 +28,7 @@ export default function Weather(props) {
               <input
                 type="search"
                 placeholder="Enter a city"
-                className="search-form"
+                className="form-control"
               />
             </div>
             <div className="col-3">
@@ -40,22 +42,26 @@ export default function Weather(props) {
         </form>
         <h1>{weatherData.city}</h1>
         <ul>
-          <li>{weatherData.date}</li>
-          <li className="text-capitalize">{weatherData.decription}</li>
+          <li>
+            <FormatDate date={weatherData.date} />
+          </li>
+          <li className="text-capitalize">{weatherData.description}</li>
         </ul>
         <div className="row mt-3">
           <div className="col-6">
-            <img
-              src={weatherData.iconUrl}
-              alt={weatherData.description}
-              className="float-left"
-            />
+            <div className="clearfix">
+              <img
+                src={weatherData.iconUrl}
+                alt={weatherData.description}
+                className="float-left"
+              />
 
-            <div className="float-left">
-              <span className="temperature">
-                {Math.round(weatherData.temperature)}
-              </span>
-              <span className="unit">ºC</span>
+              <div className="float-left">
+                <span className="temperature">
+                  {Math.round(weatherData.temperature)}
+                </span>
+                <span className="unit">ºC</span>
+              </div>
             </div>
             <div className="col-6">
               <ul>
@@ -65,11 +71,9 @@ export default function Weather(props) {
             </div>
           </div>
         </div>
-      </div>
     );
   } else {
-    const apiKey = "508ac6130b578f03ce3e0dfbfbfa0cdc";
-    let city = "New York";
+  const apiKey = "0a804b7f298f836affe743f4487d2e7b";
     let apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${props.defaultCity}&appid=${apiKey}&units=metric`;
     axios.get(apiUrl).then(handleResponse);
 
