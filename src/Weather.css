@@ -4,6 +4,10 @@
   padding: 16px;
   border-radius: 4px;
   color: rgb(135, 135, 135);
+  background-image: linear-gradient(
+    rgba(30, 169, 172, 0.5),
+    rgba(255, 204, 0, 0.5)
+  );
 }
 
 .weather h1 {
